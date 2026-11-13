@@ -24,7 +24,7 @@
             <ul class="list">
                 @forelse ($latestWorkouts as $workout)
                     <li>
-                        <span><strong>{{ $workout->title }}</strong> <span class="muted">· {{ $workout->user->name }}</span></span>
+                        <span><a href="{{ route('workouts.show', $workout) }}"><strong>{{ $workout->title }}</strong></a> <span class="muted">· {{ $workout->user->name }}</span></span>
                         <span class="muted">{{ $workout->date->format('D j M') }} · {{ $workout->sets_count }} sets</span>
                     </li>
                 @empty
@@ -38,7 +38,9 @@
             @foreach ($exercisesByMuscle as $muscleGroup => $exercises)
                 <p>
                     <span class="badge">{{ $muscleGroup }}</span><br>
-                    {{ $exercises->pluck('name')->join(', ') }}
+                    @foreach ($exercises as $exercise)
+                        <a href="{{ route('exercises.show', $exercise) }}">{{ $exercise->name }}</a>@if (! $loop->last), @endif
+                    @endforeach
                 </p>
             @endforeach
         </section>

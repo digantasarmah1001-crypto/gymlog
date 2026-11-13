@@ -134,8 +134,12 @@ form.inline { display: inline; }
 .alert-error { background: #fbe4df; color: var(--red); border: 2px solid var(--red); padding: 12px 16px; border-radius: var(--radius); margin-bottom: 22px; font-weight: 600; }
 .badge { display: inline-block; padding: 2px 9px; border-radius: 3px; background: var(--iron); color: var(--lime); font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; }
 
-/* ---------- Pagination (Laravel's default markup) ---------- */
-nav[role="navigation"] { margin-top: 18px; }
+/* ---------- Pagination (resources/views/pagination.blade.php) ---------- */
+.pagination { display: flex; align-items: center; gap: 14px; margin-top: 18px; }
+.btn.disabled { opacity: .35; pointer-events: none; }
+
+/* Small dropdown used as a filter (e.g. "All athletes") */
+.filter { padding: 8px 10px; border: 2px solid var(--iron); border-radius: var(--radius); font: 600 .85rem var(--text); background: var(--paper); }
 
 footer { text-align: center; color: var(--muted); padding: 28px 0; font-size: .85rem; border-top: 1px solid var(--line); }
 

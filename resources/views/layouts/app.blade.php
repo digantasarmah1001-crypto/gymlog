@@ -11,6 +11,8 @@
     <nav class="nav">
         <div class="container">
             <a href="{{ route('home') }}" class="brand">Gym<span>Log</span></a>
+            <a href="{{ route('workouts.index') }}" @class(['active' => request()->routeIs('workouts.*', 'sets.*')])>Workouts</a>
+            <a href="{{ route('exercises.index') }}" @class(['active' => request()->routeIs('exercises.*')])>Exercises</a>
         </div>
     </nav>
 
