@@ -32,7 +32,7 @@
     <div class="card">
         <h2>Heaviest set</h2>
         @if ($heaviestSet)
-            <p><strong>{{ $heaviestSet->weight_kg }} kg</strong> × {{ $heaviestSet->reps }} reps</p>
+            <p><strong><x-weight :kg="$heaviestSet->weight_kg" /></strong> × {{ $heaviestSet->reps }} reps</p>
         @else
             <p class="muted">Nobody has logged this exercise yet.</p>
         @endif
@@ -49,7 +49,7 @@
                         <td><a href="{{ route('profiles.show', $set->workout->user) }}">{{ $set->workout->user->name }}</a></td>
                         <td>{{ $set->workout->title }}</td>
                         <td>{{ $set->reps }}</td>
-                        <td>{{ $set->weight_kg }} kg</td>
+                        <td><x-weight :kg="$set->weight_kg" /></td>
                     </tr>
                 @empty
                     <tr><td colspan="5" class="muted">No sets logged yet.</td></tr>

@@ -16,10 +16,10 @@
             <h2>{{ $exerciseName }}</h2>
             <p>
                 @foreach ($sets as $set)
-                    <a href="{{ route('sets.show', $set) }}" class="btn btn-sm">{{ $set->reps }} × {{ $set->weight_kg }} kg</a>
+                    <a href="{{ route('sets.show', $set) }}" class="btn btn-sm">{{ $set->reps }} × <x-weight :kg="$set->weight_kg" /></a>
                 @endforeach
             </p>
-            <p class="muted">Best set: {{ $sets->max('weight_kg') }} kg · Total reps: {{ $sets->sum('reps') }}</p>
+            <p class="muted">Best set: <x-weight :kg="$sets->max('weight_kg')" /> · Total reps: {{ $sets->sum('reps') }}</p>
         </div>
     @empty
         <div class="card muted">No sets logged yet.</div>

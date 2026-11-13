@@ -39,7 +39,7 @@
     <div class="grid">
         <x-stat label="Sets" :value="$workout->sets->count()" />
         <x-stat label="Reps" :value="$workout->sets->sum('reps')" />
-        <x-stat label="Kg lifted" :value="number_format($totalVolume)" />
+        <x-stat label="Lifted" :value="App\Support\Weight::format($totalVolume, decimals: 0)" />
     </div>
 
     <div class="card">
@@ -58,7 +58,7 @@
                         <td>{{ $set->set_number }}</td>
                         <td><a href="{{ route('exercises.show', $set->exercise) }}">{{ $set->exercise->name }}</a></td>
                         <td>{{ $set->reps }}</td>
-                        <td>{{ $set->weight_kg }} kg</td>
+                        <td><x-weight :kg="$set->weight_kg" /></td>
                         <td class="actions">
                             <a href="{{ route('sets.edit', $set) }}" class="btn btn-sm">Edit</a>
                             <x-delete-button :action="route('sets.destroy', $set)" confirm="Delete this set?" />

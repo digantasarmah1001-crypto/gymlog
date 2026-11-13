@@ -5,6 +5,7 @@ use App\Http\Controllers\ExerciseController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\UnitController;
 use App\Http\Controllers\WorkoutController;
 use App\Http\Controllers\WorkoutPhotoController;
 use App\Http\Controllers\WorkoutSetController;
@@ -12,6 +13,9 @@ use Illuminate\Support\Facades\Route;
 
 // Every route points to a controller method.
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// kg / lb preference, saved in the session (works for guests too).
+Route::post('/unit', [UnitController::class, 'update'])->name('unit.update');
 
 // Only for visitors who are NOT logged in ('guest' sends logged-in users away).
 Route::middleware('guest')->group(function () {

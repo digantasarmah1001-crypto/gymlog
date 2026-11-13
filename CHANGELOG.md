@@ -3,6 +3,11 @@
 GymLog follows [semantic versioning](https://semver.org): `0.x.0` while the course runs,
 where **x = the session number**. Every version is a git tag (`git tag` lists them).
 
+## v0.11.0 – Session 11
+- N+1 guard: `Model::preventLazyLoading()` outside production (every page checked, none found).
+- Welcome-page totals and exercise library cached (`Cache::remember`, 10 minutes).
+- kg / lb switch saved in the session (`UnitController`, `App\Support\Weight`, `<x-weight>`).
+
 ## v0.10.0 – Session 10
 - Custom error pages (403, 404, 419, 429, 500, 503) with their own minimal layout.
 - `ExerciseInUseException`: exercises with logged sets can't be deleted.

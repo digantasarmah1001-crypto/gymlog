@@ -7,14 +7,14 @@
         <h1>Log every rep. <mark>Beat it</mark> next time.</h1>
         <p>
             GymLog is a simple workout tracker. A workout holds the exercises you did,
-            and for every exercise you log your sets: reps × kg.
+            and for every exercise you log your sets: reps × weight.
         </p>
     </section>
 
     <section class="grid">
         <x-stat label="Workouts logged" :value="number_format($workoutCount)" />
         <x-stat label="Sets completed" :value="number_format($setCount)" />
-        <x-stat label="Kg lifted" :value="number_format($kgLifted)" />
+        <x-stat label="Lifted in total" :value="App\Support\Weight::format($kgLifted, decimals: 0)" />
         <x-stat label="Exercises" :value="$exerciseCount" />
     </section>
 

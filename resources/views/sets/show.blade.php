@@ -19,8 +19,8 @@
 
     <div class="grid">
         <x-stat label="Reps" :value="$set->reps" />
-        <x-stat label="Kg" :value="$set->weight_kg" />
-        <x-stat label="Volume (kg)" :value="number_format($set->reps * $set->weight_kg)" />
+        <x-stat label="Weight" :value="App\Support\Weight::format($set->weight_kg)" />
+        <x-stat label="Volume" :value="App\Support\Weight::format($set->reps * $set->weight_kg, decimals: 0)" />
     </div>
 
     <a href="{{ route('exercises.show', $set->exercise) }}">More about {{ $set->exercise->name }} →</a>

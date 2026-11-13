@@ -67,6 +67,9 @@ with its own data (reps, weight, set number).
 - Small vanilla JavaScript (`public/js/app.js`): image preview before upload, delete confirmation,
   auto-submitting filter. No build step.
 - Welcome email after registering (if sending fails, registering still works and the error is logged).
+- Performance: lazy loading is forbidden outside production (catches N+1 queries), the
+  welcome-page totals are cached.
+- kg / lb switch in the nav, remembered in the session (weights are always stored in kg).
 - Errors & security: custom error pages, exercises that are in use can't be deleted
   (`ExerciseInUseException`), login rate limiting. See `docs/security.md` for the full review. With the default `MAIL_MAILER=log` it is written to
   `storage/logs/laravel.log` instead of being sent.

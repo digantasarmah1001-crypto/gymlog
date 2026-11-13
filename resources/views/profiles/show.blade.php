@@ -16,7 +16,7 @@
         @if (auth()->id() === $athlete->id)
             <div class="actions">
                 @if ($athlete->bodyweight_kg)
-                    <span class="muted">Bodyweight (only you see this): <strong>{{ $athlete->bodyweight_kg }} kg</strong></span>
+                    <span class="muted">Bodyweight (only you see this): <strong><x-weight :kg="$athlete->bodyweight_kg" /></strong></span>
                 @endif
                 <a href="{{ route('profile.edit') }}" class="btn">Edit profile</a>
             </div>
@@ -40,7 +40,7 @@
                     @forelse ($personalBests as $best)
                         <tr>
                             <td><a href="{{ route('exercises.show', $best->exercise) }}">{{ $best->exercise->name }}</a></td>
-                            <td class="num"><strong>{{ $best->best_kg }} kg</strong></td>
+                            <td class="num"><strong><x-weight :kg="$best->best_kg" /></strong></td>
                             <td class="num">{{ $best->times }}</td>
                         </tr>
                     @empty
@@ -58,7 +58,7 @@
                 <div class="bar-row">
                     <span>{{ $muscle }}</span>
                     <div class="bar"><div style="width: {{ round($volume / $maxVolume * 100) }}%"></div></div>
-                    <span class="num">{{ number_format($volume) }} kg</span>
+                    <span class="num"><x-weight :kg="$volume" :decimals="0" /></span>
                 </div>
             @empty
                 <p class="muted">Nothing yet.</p>

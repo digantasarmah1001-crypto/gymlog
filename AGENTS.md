@@ -20,6 +20,8 @@ Roadmap and session schedule: `docs/plans/roadmap.md`.
 - Views extend `resources/views/layouts/app.blade.php`; shared bits live in `resources/views/components`.
 - Styling: plain CSS in `public/css/app.css`, self-hosted fonts in `public/fonts`
   (Big Shoulders Display for headings, Archivo for text). No npm build step until session 9.
+- Always eager-load relationships used in loops (`with()`); `preventLazyLoading` throws otherwise.
+- Weights are stored in kg; display them with `<x-weight :kg="..." />` (respects the kg/lb session choice).
 - Seeded admin: `admin@example.com` / `password`.
 - Auth is hand-written in `AuthController` (no starter kit). Workouts are private (WorkoutPolicy:
   owner or admin); sets follow their workout (WorkoutSetPolicy); exercises are read-only for

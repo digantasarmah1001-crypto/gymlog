@@ -20,6 +20,14 @@
             <a href="{{ route('exercises.index') }}" @class(['active' => request()->routeIs('exercises.*')])>Exercises</a>
             <a href="{{ route('profiles.index') }}" @class(['active' => request()->routeIs('profiles.index')])>Athletes</a>
 
+            {{-- kg / lb switch: the choice is stored in the session (UnitController) --}}
+            <form method="POST" action="{{ route('unit.update') }}" class="unit-switch">
+                @csrf
+                @foreach (App\Support\Weight::UNITS as $unit)
+                    <button type="submit" name="unit" value="{{ $unit }}" @class(['on' => App\Support\Weight::unit() === $unit])>{{ $unit }}</button>
+                @endforeach
+            </form>
+
             {{-- @auth / @guest: show different links depending on whether someone is logged in --}}
             @auth
                 <a href="{{ route('profiles.show', auth()->user()) }}" class="nav-user">
