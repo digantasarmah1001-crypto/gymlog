@@ -26,7 +26,7 @@ Then open http://localhost:8000. No `npm` build is needed.
 
 ## Data model
 
-`User 1‑N Workout 1‑N WorkoutSet N‑1 Exercise`
+`User 1‑N Workout 1‑N WorkoutSet N‑1 Exercise` and `Workout N‑M Tag`
 
 | Model | Fields | Relationships |
 |---|---|---|
@@ -34,6 +34,7 @@ Then open http://localhost:8000. No `npm` build is needed.
 | `Workout` | user_id, title, date, duration_minutes, notes | belongs to `User`, has many `WorkoutSet` |
 | `WorkoutSet` | workout_id, exercise_id, set_number, reps, weight_kg | belongs to `Workout` and `Exercise` |
 | `Exercise` | name (unique), muscle_group, equipment, description | has many `WorkoutSet` |
+| `Tag` | name (unique) | belongs to many `Workout` (pivot `tag_workout`) |
 
 `WorkoutSet` sits in the middle: Workout ↔ Exercise is many-to-many *through* it,
 with its own data (reps, weight, set number).
@@ -55,6 +56,18 @@ with its own data (reps, weight, set number).
   - workouts and their sets are private (owner or admin only);
   - only admins add, edit or delete exercises; everyone can browse them;
   - your bodyweight and email are never shown to other people.
+- Tags on workouts (many-to-many via the `tag_workout` pivot table); admins manage the tag list.
+- Welcome email after registering. With the default `MAIL_MAILER=log` it is written to
+  `storage/logs/laravel.log` instead of being sent.
+
+## Packages
+
+- `barryvdh/laravel-debugbar` (dev only): a bar at the bottom of each page in local development
+  that shows the SQL queries, timing and views. Disable it with `DEBUGBAR_ENABLED=false` in `.env`.
+
+## Versions
+
+See `CHANGELOG.md`. Each session is tagged `v0.<session>.0`.
 
 ## Project files for AI tools
 

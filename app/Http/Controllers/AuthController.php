@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Mail\WelcomeMail;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 
 /**
@@ -24,6 +26,9 @@ class AuthController extends Controller
     {
         // The 'hashed' cast on User hashes the password before it is saved.
         $user = User::create($request->validated());
+
+        // External service: send a welcome email (see app/Mail/WelcomeMail.php).
+        Mail::to($user)->send(new WelcomeMail($user));
 
         Auth::login($user);                 // log the new athlete in straight away
         $request->session()->regenerate();  // new session id (prevents session fixation)

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable(['user_id', 'title', 'date', 'duration_minutes', 'notes'])]
@@ -36,5 +37,13 @@ class Workout extends Model
     public function sets(): HasMany
     {
         return $this->hasMany(WorkoutSet::class)->orderBy('set_number');
+    }
+
+    /**
+     * N-M: the tags on this workout (pivot table tag_workout).
+     */
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(Tag::class)->orderBy('name');
     }
 }

@@ -151,6 +151,15 @@ form.inline { display: inline; }
 .alert-error { background: #fbe4df; color: var(--red); border: 2px solid var(--red); padding: 12px 16px; border-radius: var(--radius); margin-bottom: 22px; font-weight: 600; }
 .badge { display: inline-block; padding: 2px 9px; border-radius: 3px; background: var(--iron); color: var(--lime); font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; }
 
+/* ---------- Tags ---------- */
+.tag { display: inline-block; padding: 2px 10px; border: 2px solid var(--iron); border-radius: 999px; font-size: .8rem; font-weight: 600; text-decoration: none; background: var(--paper); margin: 0 4px 4px 0; }
+a.tag:hover { background: var(--lime); }
+.tag-sm { font-size: .68rem; padding: 0 7px; border-width: 1px; }
+.tag-lg { font-size: 2rem; padding: 4px 18px; border-width: 3px; font-family: var(--display); }
+fieldset.field { border: 0; padding: 0; margin: 0 0 18px; }
+fieldset.field legend { font-weight: 600; font-size: .85rem; text-transform: uppercase; letter-spacing: .8px; margin-bottom: 8px; padding: 0; }
+.tag-picker { display: flex; flex-wrap: wrap; gap: 8px 16px; }
+
 /* ---------- Pagination (resources/views/pagination.blade.php) ---------- */
 .pagination { display: flex; align-items: center; gap: 14px; margin-top: 18px; }
 .btn.disabled { opacity: .35; pointer-events: none; }

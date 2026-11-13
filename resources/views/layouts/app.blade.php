@@ -13,6 +13,7 @@
             <a href="{{ route('home') }}" class="brand">Gym<span>Log</span></a>
             @auth
                 <a href="{{ route('workouts.index') }}" @class(['active' => request()->routeIs('workouts.*', 'sets.*')])>My workouts</a>
+                <a href="{{ route('tags.index') }}" @class(['active' => request()->routeIs('tags.*')])>Tags</a>
             @endauth
             <a href="{{ route('exercises.index') }}" @class(['active' => request()->routeIs('exercises.*')])>Exercises</a>
             <a href="{{ route('profiles.index') }}" @class(['active' => request()->routeIs('profiles.index')])>Athletes</a>

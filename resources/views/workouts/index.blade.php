@@ -30,7 +30,12 @@
                 @forelse ($workouts as $workout)
                     <tr>
                         <td>{{ $workout->date->format('D j M Y') }}</td>
-                        <td><a href="{{ route('workouts.show', $workout) }}">{{ $workout->title }}</a></td>
+                        <td>
+                            <a href="{{ route('workouts.show', $workout) }}">{{ $workout->title }}</a>
+                            @foreach ($workout->tags as $tag)
+                                <span class="tag tag-sm">{{ $tag->name }}</span>
+                            @endforeach
+                        </td>
                         <td><a href="{{ route('profiles.show', $workout->user) }}">{{ $workout->user->name }}</a></td>
                         <td>{{ $workout->duration_minutes ? $workout->duration_minutes . ' min' : '—' }}</td>
                         <td>{{ $workout->sets_count }}</td>

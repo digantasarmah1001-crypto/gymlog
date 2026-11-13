@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Exercise;
+use App\Models\Tag;
 use App\Models\User;
 use App\Models\Workout;
 use App\Models\WorkoutSet;
@@ -29,6 +30,7 @@ class DatabaseSeeder extends Seeder
         $users = User::factory(10)->create()->push($admin);
 
         $exercises = Exercise::factory(20)->create();
+        $tags = Tag::factory(8)->create();
 
         // Workout types and the muscle groups trained in them.
         $workoutTypes = [
@@ -45,6 +47,7 @@ class DatabaseSeeder extends Seeder
             for ($w = 0; $w < fake()->numberBetween(3, 6); $w++) {
                 $title = array_rand($workoutTypes);
                 $workout = Workout::factory()->for($user)->create(['title' => $title]);
+                $workout->tags()->attach($tags->random(fake()->numberBetween(0, 2))); // N-M: 0-2 tags
 
                 $matching = $exercises->whereIn('muscle_group', $workoutTypes[$title]);
                 $setNumber = 1;

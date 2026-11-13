@@ -18,6 +18,14 @@
         </div>
     </div>
 
+    @if ($workout->tags->isNotEmpty())
+        <p>
+            @foreach ($workout->tags as $tag)
+                <a href="{{ route('tags.show', $tag) }}" class="tag">{{ $tag->name }}</a>
+            @endforeach
+        </p>
+    @endif
+
     @if ($workout->notes)
         <div class="card">{{ $workout->notes }}</div>
     @endif

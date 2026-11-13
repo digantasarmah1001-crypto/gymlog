@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreWorkoutRequest;
 use App\Http\Requests\UpdateWorkoutRequest;
+use App\Models\Tag;
 use App\Models\User;
 use App\Models\Workout;
 use Illuminate\Http\RedirectResponse;
@@ -24,7 +25,7 @@ class WorkoutController extends Controller
     {
         $user = $request->user();
 
-        $workouts = Workout::with('user')
+        $workouts = Workout::with(['user', 'tags'])
             ->withCount('sets')
             ->when(! $user->is_admin, fn ($query) => $query->where('user_id', $user->id))
             ->when($user->is_admin && $request->integer('user'), fn ($query) => $query->where('user_id', $request->integer('user')))
@@ -42,6 +43,7 @@ class WorkoutController extends Controller
     {
         return view('workouts.create', [
             'workout' => new Workout(['date' => today()]),
+            'tags' => Tag::orderBy('name')->get(),
         ]);
     }
 
@@ -50,7 +52,9 @@ class WorkoutController extends Controller
      */
     public function store(StoreWorkoutRequest $request): RedirectResponse
     {
-        $workout = $request->user()->workouts()->create($request->validated());
+        // 'tags' isn't a column, so save the other fields first, then the N-M links.
+        $workout = $request->user()->workouts()->create($request->safe()->except('tags'));
+        $workout->tags()->sync($request->validated('tags', []));
 
         return redirect()->route('workouts.show', $workout)
             ->with('status', 'Workout logged. Now add your sets!');
@@ -60,7 +64,7 @@ class WorkoutController extends Controller
     {
         Gate::authorize('view', $workout); // 403 if it isn't your workout
 
-        $workout->load(['user', 'sets.exercise']);
+        $workout->load(['user', 'tags', 'sets.exercise']);
 
         return view('workouts.show', [
             'workout' => $workout,
@@ -72,7 +76,10 @@ class WorkoutController extends Controller
     {
         Gate::authorize('update', $workout);
 
-        return view('workouts.edit', ['workout' => $workout]);
+        return view('workouts.edit', [
+            'workout' => $workout,
+            'tags' => Tag::orderBy('name')->get(),
+        ]);
     }
 
     /**
@@ -80,7 +87,9 @@ class WorkoutController extends Controller
      */
     public function update(UpdateWorkoutRequest $request, Workout $workout): RedirectResponse
     {
-        $workout->update($request->validated());
+        $workout->update($request->safe()->except('tags'));
+        // sync() = make the pivot table match exactly these tag ids (adds new links, removes unticked ones).
+        $workout->tags()->sync($request->validated('tags', []));
 
         return redirect()->route('workouts.show', $workout)
             ->with('status', 'Workout updated.');

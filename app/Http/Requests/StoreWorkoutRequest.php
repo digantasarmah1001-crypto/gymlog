@@ -27,6 +27,9 @@ class StoreWorkoutRequest extends FormRequest
             'date' => ['required', 'date', 'before_or_equal:today'],
             'duration_minutes' => ['nullable', 'integer', 'min:1', 'max:600'],
             'notes' => ['nullable', 'string', 'max:2000'],
+            // Ticked tag checkboxes arrive as an array of tag ids.
+            'tags' => ['nullable', 'array'],
+            'tags.*' => ['integer', 'exists:tags,id'],
         ];
     }
 

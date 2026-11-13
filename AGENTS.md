@@ -10,6 +10,7 @@ Roadmap and session schedule: `docs/plans/roadmap.md`.
 - `Workout` 1‑N `WorkoutSet` (set_number, reps, weight_kg)
 - `Exercise` 1‑N `WorkoutSet` (name, muscle_group, equipment, description)
 - So Workout ↔ Exercise is many-to-many *through* `WorkoutSet` (a pivot with its own data).
+- `Workout` N‑M `Tag` (pivot `tag_workout`, sync with `$workout->tags()->sync($ids)`).
 
 ## Stack & conventions
 - Laravel 13, PHP 8.3, Blade views (no SPA), SQLite locally.
