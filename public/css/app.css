@@ -1,0 +1,150 @@
+/*
+ * GymLog stylesheet – "chalk & iron"
+ * Plain CSS on purpose (no build step). Vite comes in session 9.
+ */
+
+/* ---------- Fonts (self-hosted, see public/fonts) ---------- */
+@font-face { font-family: "Big Shoulders"; font-weight: 700; font-display: swap; src: url("../fonts/big-shoulders-display-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Big Shoulders"; font-weight: 800; font-display: swap; src: url("../fonts/big-shoulders-display-latin-800-normal.woff2") format("woff2"); }
+@font-face { font-family: "Big Shoulders"; font-weight: 900; font-display: swap; src: url("../fonts/big-shoulders-display-latin-900-normal.woff2") format("woff2"); }
+@font-face { font-family: "Archivo"; font-weight: 400; font-display: swap; src: url("../fonts/archivo-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Archivo"; font-weight: 500; font-display: swap; src: url("../fonts/archivo-latin-500-normal.woff2") format("woff2"); }
+@font-face { font-family: "Archivo"; font-weight: 600; font-display: swap; src: url("../fonts/archivo-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Archivo"; font-weight: 700; font-display: swap; src: url("../fonts/archivo-latin-700-normal.woff2") format("woff2"); }
+
+/* ---------- Colours & sizes in one place ---------- */
+:root {
+    --chalk: #f3f1ec;        /* page background */
+    --paper: #ffffff;        /* cards */
+    --iron: #141414;         /* text, nav, dark panels */
+    --iron-2: #262626;
+    --muted: #6d6a63;
+    --line: #dedad2;
+    --lime: #c8f03c;         /* accent */
+    --lime-dark: #a9d01f;
+    --red: #d6402b;
+    --radius: 6px;
+    --display: "Big Shoulders", "Arial Narrow", sans-serif-condensed, sans-serif;
+    --text: "Archivo", "Helvetica Neue", Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: var(--text);
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--iron);
+    background: var(--chalk);
+}
+
+h1, h2, h3 {
+    font-family: var(--display);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    line-height: 1.05;
+    margin: 0 0 .4em;
+}
+h1 { font-size: 3rem; }
+h2 { font-size: 1.8rem; }
+h3 { font-size: 1.3rem; }
+
+a { color: var(--iron); text-decoration-color: var(--lime-dark); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+a:hover { background: var(--lime); }
+
+.container { max-width: 1040px; margin: 0 auto; padding: 0 20px; }
+.muted { color: var(--muted); }
+
+/* ---------- Navigation ---------- */
+.nav { background: var(--iron); color: #fff; border-bottom: 4px solid var(--lime); }
+.nav .container { display: flex; align-items: center; gap: 28px; height: 64px; }
+.nav a { color: #fff; text-decoration: none; font-weight: 600; text-transform: uppercase; font-size: .85rem; letter-spacing: 1px; padding: 6px 0; border-bottom: 2px solid transparent; }
+.nav a:hover { background: none; border-bottom-color: var(--lime); }
+.nav a.active { border-bottom-color: var(--lime); }
+.nav .brand { font-family: var(--display); font-size: 2rem; font-weight: 900; letter-spacing: 1px; border: 0; margin-right: auto; }
+.nav .brand span { color: var(--lime); }
+
+main { padding: 36px 0 72px; }
+
+/* ---------- Page header ---------- */
+.page-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+.page-header h1 { margin: 0; }
+.actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+/* ---------- Hero (welcome page) ---------- */
+.hero { background: var(--iron); color: #fff; border-radius: var(--radius); padding: 48px 40px; margin-bottom: 28px; position: relative; overflow: hidden; }
+.hero h1 { font-size: 4.2rem; max-width: 640px; }
+.hero h1 mark { background: var(--lime); color: var(--iron); padding: 0 8px; }
+.hero p { max-width: 520px; color: #d6d3cc; font-size: 1.1rem; margin: 0; }
+.hero::after { /* big faded "plate" in the corner, just decoration */
+    content: ""; position: absolute; right: -60px; top: -60px; width: 260px; height: 260px;
+    border-radius: 50%; border: 36px solid var(--iron-2); box-shadow: inset 0 0 0 30px #1d1d1d;
+}
+
+/* ---------- Cards & grids ---------- */
+.card { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px 24px; margin-bottom: 22px; }
+.grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: 28px; }
+.split { display: grid; gap: 22px; grid-template-columns: 3fr 2fr; align-items: start; }
+.stat { background: var(--paper); border: 1px solid var(--line); border-left: 6px solid var(--lime); border-radius: var(--radius); padding: 16px 20px; }
+.stat .value { font-family: var(--display); font-size: 2.8rem; font-weight: 900; line-height: 1; }
+.stat .label { color: var(--muted); font-size: .8rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-top: 6px; }
+
+.list { list-style: none; margin: 0; padding: 0; }
+.list li { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.list li:last-child { border-bottom: 0; }
+
+/* ---------- Tables ---------- */
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 11px 8px; border-bottom: 1px solid var(--line); }
+th { font-size: .75rem; text-transform: uppercase; color: var(--muted); letter-spacing: 1px; font-weight: 600; }
+tr:last-child td { border-bottom: 0; }
+td.num { font-variant-numeric: tabular-nums; }
+
+/* ---------- Buttons ---------- */
+.btn {
+    display: inline-block; padding: 9px 16px; border-radius: var(--radius); border: 2px solid var(--iron);
+    background: var(--paper); color: var(--iron); text-decoration: none; cursor: pointer;
+    font: 600 .85rem var(--text); text-transform: uppercase; letter-spacing: .8px;
+}
+.btn:hover { background: var(--iron); color: #fff; }
+.btn-primary { background: var(--lime); border-color: var(--iron); }
+.btn-primary:hover { background: var(--iron); color: var(--lime); }
+.btn-danger { color: var(--red); border-color: var(--red); }
+.btn-danger:hover { background: var(--red); color: #fff; }
+.btn-sm { padding: 4px 10px; font-size: .75rem; }
+form.inline { display: inline; }
+
+/* ---------- Forms ---------- */
+.form { max-width: 620px; }
+.field { margin-bottom: 18px; }
+.field label { display: block; font-weight: 600; font-size: .85rem; text-transform: uppercase; letter-spacing: .8px; margin-bottom: 6px; }
+.field input, .field select, .field textarea {
+    width: 100%; padding: 10px 12px; border: 2px solid var(--line); border-radius: var(--radius);
+    font: inherit; background: var(--paper); color: var(--iron);
+}
+.field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--iron); box-shadow: 0 0 0 3px var(--lime); }
+.field textarea { min-height: 110px; }
+.field.has-error input, .field.has-error select, .field.has-error textarea { border-color: var(--red); }
+.error { color: var(--red); font-size: .85rem; margin-top: 5px; font-weight: 500; }
+
+/* ---------- Messages & badges ---------- */
+.flash { background: var(--lime); color: var(--iron); padding: 12px 16px; border-radius: var(--radius); margin-bottom: 22px; font-weight: 600; }
+.alert-error { background: #fbe4df; color: var(--red); border: 2px solid var(--red); padding: 12px 16px; border-radius: var(--radius); margin-bottom: 22px; font-weight: 600; }
+.badge { display: inline-block; padding: 2px 9px; border-radius: 3px; background: var(--iron); color: var(--lime); font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; }
+
+/* ---------- Pagination (Laravel's default markup) ---------- */
+nav[role="navigation"] { margin-top: 18px; }
+
+footer { text-align: center; color: var(--muted); padding: 28px 0; font-size: .85rem; border-top: 1px solid var(--line); }
+
+/* ---------- Small screens ---------- */
+@media (max-width: 640px) {
+    h1 { font-size: 2.3rem; }
+    .hero { padding: 32px 22px; }
+    .hero h1 { font-size: 2.8rem; }
+    .nav .container { gap: 16px; }
+    table { font-size: .9rem; }
+    .split { grid-template-columns: 1fr; }
+}
