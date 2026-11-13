@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\ExerciseInUseException;
 use App\Http\Requests\StoreExerciseRequest;
 use App\Http\Requests\UpdateExerciseRequest;
 use App\Models\Exercise;
@@ -10,6 +11,7 @@ use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 /**
@@ -56,7 +58,8 @@ class ExerciseController extends Controller implements HasMiddleware
 
         if ($request->hasFile('image')) {
             // store() picks a unique random file name and returns the path, e.g. "exercises/Xy7….jpg"
-            $exercise->image_path = $request->file('image')->store('exercises', 'public');
+            $exercise->image_path = $request->file('image')->store('exercises', 'public')
+                ?: throw ValidationException::withMessages(['image' => 'The photo could not be saved, please try again.']);
         }
 
         $exercise->save();
@@ -103,7 +106,8 @@ class ExerciseController extends Controller implements HasMiddleware
             if ($exercise->image_path) {
                 Storage::disk('public')->delete($exercise->image_path);
             }
-            $exercise->image_path = $request->file('image')->store('exercises', 'public');
+            $exercise->image_path = $request->file('image')->store('exercises', 'public')
+                ?: throw ValidationException::withMessages(['image' => 'The photo could not be saved, please try again.']);
         }
 
         $exercise->save();
@@ -118,6 +122,11 @@ class ExerciseController extends Controller implements HasMiddleware
     public function destroy(Exercise $exercise): RedirectResponse
     {
         Gate::authorize('delete', $exercise);
+
+        // Business rule: an exercise with logged sets may not be deleted (see the exception class).
+        if ($exercise->sets()->exists()) {
+            throw new ExerciseInUseException($exercise);
+        }
 
         if ($exercise->image_path) {
             Storage::disk('public')->delete($exercise->image_path);

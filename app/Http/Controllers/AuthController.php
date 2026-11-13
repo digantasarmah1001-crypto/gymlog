@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
+use Throwable;
 
 /**
  * Register, log in and log out, written by hand (no starter kit) so every step is visible.
@@ -28,13 +29,22 @@ class AuthController extends Controller
         $user = User::create($request->validated());
 
         // External service: send a welcome email (see app/Mail/WelcomeMail.php).
-        Mail::to($user)->send(new WelcomeMail($user));
+        // If the mail server is down, registering must still work: catch the error,
+        // log it with report(), and tell the user instead of showing a 500 page.
+        $mailFailed = false;
+        try {
+            Mail::to($user)->send(new WelcomeMail($user));
+        } catch (Throwable $e) {
+            report($e);
+            $mailFailed = true;
+        }
 
         Auth::login($user);                 // log the new athlete in straight away
         $request->session()->regenerate();  // new session id (prevents session fixation)
 
         return redirect()->route('workouts.index')
-            ->with('status', "Welcome to GymLog, {$user->name}! Log your first workout.");
+            ->with('status', "Welcome to GymLog, {$user->name}! Log your first workout."
+                .($mailFailed ? ' (We could not send your welcome email.)' : ''));
     }
 
     public function showLogin(): View

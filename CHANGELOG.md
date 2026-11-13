@@ -3,6 +3,12 @@
 GymLog follows [semantic versioning](https://semver.org): `0.x.0` while the course runs,
 where **x = the session number**. Every version is a git tag (`git tag` lists them).
 
+## v0.10.0 – Session 10
+- Custom error pages (403, 404, 419, 429, 500, 503) with their own minimal layout.
+- `ExerciseInUseException`: exercises with logged sets can't be deleted.
+- Registration survives a failing mail server (try/catch + `report()`); failed uploads show a form error.
+- Login and register are rate limited (`throttle:5,1`). Security review in `docs/security.md`.
+
 ## v0.9.0 – Session 9
 - Exercise photos (public disk) and private progress photos served by `WorkoutPhotoController`.
 - `public/js/app.js`: upload preview, delete confirmation, auto-submit filter (no inline JS).

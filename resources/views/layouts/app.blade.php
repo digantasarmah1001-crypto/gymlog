@@ -44,6 +44,11 @@
                 <div class="flash">{{ session('status') }}</div>
             @endif
 
+            {{-- Red message when an action was refused (e.g. ExerciseInUseException) --}}
+            @if (session('error'))
+                <div class="flash-error">{{ session('error') }}</div>
+            @endif
+
             {{-- Red banner when a form came back with validation errors --}}
             @if ($errors->any())
                 <div class="alert-error">Please fix the highlighted fields below.</div>

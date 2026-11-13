@@ -33,7 +33,7 @@
                             @endcan
                             @can('delete', $exercise)
                                 <x-delete-button :action="route('exercises.destroy', $exercise)"
-                                                 confirm="Delete this exercise and all its logged sets?" />
+                                                 confirm="Delete this exercise?" />
                             @endcan
                         </td>
                     </tr>

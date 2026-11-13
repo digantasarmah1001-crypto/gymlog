@@ -11,6 +11,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 /**
@@ -58,7 +59,8 @@ class WorkoutController extends Controller
 
         if ($request->hasFile('photo')) {
             // 'local' = the PRIVATE disk (storage/app/private): no public URL exists for it.
-            $workout->photo_path = $request->file('photo')->store('progress-photos', 'local');
+            $workout->photo_path = $request->file('photo')->store('progress-photos', 'local')
+                ?: throw ValidationException::withMessages(['photo' => 'The photo could not be saved, please try again.']);
         }
 
         $workout->save();
@@ -101,7 +103,8 @@ class WorkoutController extends Controller
             if ($workout->photo_path) {
                 Storage::disk('local')->delete($workout->photo_path);
             }
-            $workout->photo_path = $request->file('photo')->store('progress-photos', 'local');
+            $workout->photo_path = $request->file('photo')->store('progress-photos', 'local')
+                ?: throw ValidationException::withMessages(['photo' => 'The photo could not be saved, please try again.']);
         }
 
         $workout->save();

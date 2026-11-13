@@ -66,7 +66,9 @@ with its own data (reps, weight, set number).
     `WorkoutPhotoController` after the same permission check as the workout.
 - Small vanilla JavaScript (`public/js/app.js`): image preview before upload, delete confirmation,
   auto-submitting filter. No build step.
-- Welcome email after registering. With the default `MAIL_MAILER=log` it is written to
+- Welcome email after registering (if sending fails, registering still works and the error is logged).
+- Errors & security: custom error pages, exercises that are in use can't be deleted
+  (`ExerciseInUseException`), login rate limiting. See `docs/security.md` for the full review. With the default `MAIL_MAILER=log` it is written to
   `storage/logs/laravel.log` instead of being sent.
 
 ## Packages

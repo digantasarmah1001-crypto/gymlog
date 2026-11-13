@@ -16,9 +16,10 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 // Only for visitors who are NOT logged in ('guest' sends logged-in users away).
 Route::middleware('guest')->group(function () {
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-    Route::post('/register', [AuthController::class, 'register']);
+    // throttle:5,1 = max 5 attempts per minute per visitor, then a 429 error (stops password guessing).
+    Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:5,1');
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
 });
 
 // Public pages: the exercise library and athlete profiles.

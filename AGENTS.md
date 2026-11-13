@@ -25,6 +25,8 @@ Roadmap and session schedule: `docs/plans/roadmap.md`.
   owner or admin); sets follow their workout (WorkoutSetPolicy); exercises are read-only for
   non-admins (ExercisePolicy). Check permissions with Form Request `authorize()` or `Gate::authorize()`.
 - `is_admin` is never fillable.
+- Expected business-rule failures use custom exceptions with `render()` (see `app/Exceptions`);
+  error pages live in `resources/views/errors` and use the DB-free `layouts/error` layout.
 
 ## Workflow
 - One commit per course session (15 in total), containing exactly that session's work from the roadmap.
