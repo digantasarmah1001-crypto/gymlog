@@ -30,6 +30,8 @@ class StoreExerciseRequest extends FormRequest
             'muscle_group' => ['required', Rule::in(Exercise::MUSCLE_GROUPS)],
             'equipment' => ['nullable', 'string', 'max:50'],
             'description' => ['nullable', 'string', 'max:1000'],
+            // Uploaded file: must really be an image, max 2 MB (2048 KB).
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ];
     }
 }

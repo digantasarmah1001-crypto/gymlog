@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 /**
@@ -51,7 +52,14 @@ class ExerciseController extends Controller implements HasMiddleware
      */
     public function store(StoreExerciseRequest $request): RedirectResponse
     {
-        $exercise = Exercise::create($request->validated());
+        $exercise = new Exercise($request->safe()->except('image'));
+
+        if ($request->hasFile('image')) {
+            // store() picks a unique random file name and returns the path, e.g. "exercises/Xy7….jpg"
+            $exercise->image_path = $request->file('image')->store('exercises', 'public');
+        }
+
+        $exercise->save();
 
         return redirect()->route('exercises.show', $exercise)
             ->with('status', "Exercise \"{$exercise->name}\" added.");
@@ -88,7 +96,17 @@ class ExerciseController extends Controller implements HasMiddleware
      */
     public function update(UpdateExerciseRequest $request, Exercise $exercise): RedirectResponse
     {
-        $exercise->update($request->validated());
+        $exercise->fill($request->safe()->except('image'));
+
+        if ($request->hasFile('image')) {
+            // Replace the old photo: delete the old file first so no orphans stay on disk.
+            if ($exercise->image_path) {
+                Storage::disk('public')->delete($exercise->image_path);
+            }
+            $exercise->image_path = $request->file('image')->store('exercises', 'public');
+        }
+
+        $exercise->save();
 
         return redirect()->route('exercises.show', $exercise)
             ->with('status', 'Exercise updated.');
@@ -101,6 +119,9 @@ class ExerciseController extends Controller implements HasMiddleware
     {
         Gate::authorize('delete', $exercise);
 
+        if ($exercise->image_path) {
+            Storage::disk('public')->delete($exercise->image_path);
+        }
         $exercise->delete();
 
         return redirect()->route('exercises.index')

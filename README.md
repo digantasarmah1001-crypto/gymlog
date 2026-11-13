@@ -16,8 +16,11 @@ composer install
 cp .env.example .env
 php artisan key:generate
 php artisan migrate:fresh --seed
+php artisan storage:link
 php artisan serve
 ```
+
+`storage:link` is needed once, so uploaded exercise photos are reachable at `/storage/...`.
 
 When `migrate` asks to create the SQLite database, answer **yes**.
 Then open http://localhost:8000. No `npm` build is needed.
@@ -57,6 +60,12 @@ with its own data (reps, weight, set number).
   - only admins add, edit or delete exercises; everyone can browse them;
   - your bodyweight and email are never shown to other people.
 - Tags on workouts (many-to-many via the `tag_workout` pivot table); admins manage the tag list.
+- Photo uploads:
+  - exercise photos on the **public** disk (`storage/app/public`, visible to everyone);
+  - progress photos on the **private** disk (`storage/app/private`), only served through
+    `WorkoutPhotoController` after the same permission check as the workout.
+- Small vanilla JavaScript (`public/js/app.js`): image preview before upload, delete confirmation,
+  auto-submitting filter. No build step.
 - Welcome email after registering. With the default `MAIL_MAILER=log` it is written to
   `storage/logs/laravel.log` instead of being sent.
 

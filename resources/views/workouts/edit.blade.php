@@ -5,7 +5,7 @@
 @section('content')
     <h1>Edit workout</h1>
 
-    <form method="POST" action="{{ route('workouts.update', $workout) }}" class="card form" novalidate>
+    <form method="POST" action="{{ route('workouts.update', $workout) }}" class="card form" enctype="multipart/form-data" novalidate>
         @csrf
         @method('PUT')
         @include('workouts._form')

@@ -8,7 +8,7 @@
         <div class="actions">
             @if ($athletes->isNotEmpty())   {{-- only admins get the athlete filter --}}
             <form method="GET" action="{{ route('workouts.index') }}" class="actions">
-                <select name="user" class="filter" onchange="this.form.submit()">
+                <select name="user" class="filter" data-autosubmit>
                     <option value="">All athletes</option>
                     @foreach ($athletes as $id => $name)
                         <option value="{{ $id }}" @selected(request('user') == $id)>{{ $name }}</option>

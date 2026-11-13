@@ -20,3 +20,7 @@
     <x-error name="tags" />
     <x-error name="tags.*" />
 </fieldset>
+
+{{-- Private: the current photo is loaded through the protected workouts.photo route. --}}
+<x-image-upload name="photo" label="Progress photo (optional, private, max 4 MB)"
+                :current="$workout->photo_path ? route('workouts.photo', $workout) : null" />

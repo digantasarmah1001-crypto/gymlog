@@ -23,4 +23,13 @@ class Exercise extends Model
     {
         return $this->hasMany(WorkoutSet::class);
     }
+
+    /**
+     * Public URL of the photo, or null. asset() uses the address you're browsing on,
+     * so it also works with "php artisan serve" on port 8000. Needs: php artisan storage:link
+     */
+    public function imageUrl(): ?string
+    {
+        return $this->image_path ? asset('storage/'.$this->image_path) : null;
+    }
 }

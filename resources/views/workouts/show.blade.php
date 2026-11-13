@@ -26,8 +26,14 @@
         </p>
     @endif
 
-    @if ($workout->notes)
-        <div class="card">{{ $workout->notes }}</div>
+    @if ($workout->notes || $workout->photo_path)
+        <div class="card media">
+            @if ($workout->photo_path)
+                {{-- Private file: served by WorkoutPhotoController after a permission check --}}
+                <img src="{{ route('workouts.photo', $workout) }}" alt="Progress photo" class="photo">
+            @endif
+            <p>{{ $workout->notes }}</p>
+        </div>
     @endif
 
     <div class="grid">

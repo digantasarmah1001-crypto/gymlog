@@ -4,3 +4,4 @@
           :value="$exercise->muscle_group" required />
 <x-input name="equipment" label="Equipment (optional)" :value="$exercise->equipment" placeholder="e.g. Barbell" />
 <x-textarea name="description" label="Description (optional)" :value="$exercise->description" />
+<x-image-upload name="image" label="Photo (optional, max 2 MB)" :current="$exercise->imageUrl()" />

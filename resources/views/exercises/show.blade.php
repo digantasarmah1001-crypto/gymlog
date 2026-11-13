@@ -20,8 +20,13 @@
         </div>
     </div>
 
-    @if ($exercise->description)
-        <div class="card">{{ $exercise->description }}</div>
+    @if ($exercise->image_path || $exercise->description)
+        <div class="card media">
+            @if ($exercise->image_path)
+                <img src="{{ $exercise->imageUrl() }}" alt="{{ $exercise->name }}" class="photo">
+            @endif
+            <p>{{ $exercise->description }}</p>
+        </div>
     @endif
 
     <div class="card">

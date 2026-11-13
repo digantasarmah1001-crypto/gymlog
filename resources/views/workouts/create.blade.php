@@ -5,7 +5,7 @@
 @section('content')
     <h1>Log a workout</h1>
 
-    <form method="POST" action="{{ route('workouts.store') }}" class="card form" novalidate>
+    <form method="POST" action="{{ route('workouts.store') }}" class="card form" enctype="multipart/form-data" novalidate>
         @csrf
         @include('workouts._form')
         <div class="actions">

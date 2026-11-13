@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\WorkoutController;
+use App\Http\Controllers\WorkoutPhotoController;
 use App\Http\Controllers\WorkoutSetController;
 use Illuminate\Support\Facades\Route;
 
@@ -35,6 +36,8 @@ Route::middleware('auth')->group(function () {
 
     // One line = the 7 CRUD routes (index, create, store, show, edit, update, destroy).
     Route::resource('workouts', WorkoutController::class);
+    // Private progress photo of a workout (checked by WorkoutPolicy@view).
+    Route::get('/workouts/{workout}/photo', [WorkoutPhotoController::class, 'show'])->name('workouts.photo');
 
     // Sets are nested inside a workout. shallow() keeps the workout in the URL only where it's needed:
     //   /workouts/{workout}/sets        index, create, store

@@ -18,7 +18,12 @@
             <tbody>
                 @forelse ($exercises as $exercise)
                     <tr>
-                        <td><a href="{{ route('exercises.show', $exercise) }}">{{ $exercise->name }}</a></td>
+                        <td>
+                            @if ($exercise->image_path)
+                                <img src="{{ $exercise->imageUrl() }}" alt="" class="thumb thumb-sm">
+                            @endif
+                            <a href="{{ route('exercises.show', $exercise) }}">{{ $exercise->name }}</a>
+                        </td>
                         <td><span class="badge">{{ $exercise->muscle_group }}</span></td>
                         <td>{{ $exercise->equipment ?? '—' }}</td>
                         <td>{{ $exercise->sets_count }}</td>

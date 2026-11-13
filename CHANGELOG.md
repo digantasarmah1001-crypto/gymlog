@@ -3,6 +3,10 @@
 GymLog follows [semantic versioning](https://semver.org): `0.x.0` while the course runs,
 where **x = the session number**. Every version is a git tag (`git tag` lists them).
 
+## v0.9.0 – Session 9
+- Exercise photos (public disk) and private progress photos served by `WorkoutPhotoController`.
+- `public/js/app.js`: upload preview, delete confirmation, auto-submit filter (no inline JS).
+
 ## v0.8.0 – Session 8
 - Tags: many-to-many between tags and workouts (`tag_workout` pivot), full CRUD for admins.
 - Welcome email on registration (`App\Mail\WelcomeMail`, log mailer by default).

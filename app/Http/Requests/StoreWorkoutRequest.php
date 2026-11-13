@@ -30,6 +30,7 @@ class StoreWorkoutRequest extends FormRequest
             // Ticked tag checkboxes arrive as an array of tag ids.
             'tags' => ['nullable', 'array'],
             'tags.*' => ['integer', 'exists:tags,id'],
+            'photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
         ];
     }
 

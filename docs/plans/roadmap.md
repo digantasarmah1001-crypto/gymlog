@@ -13,7 +13,7 @@ Each session ends with **one commit** that contains exactly that session's GymLo
 | 6 | Eloquent vs Collections, privacy, profiles | Stats (personal bests, workouts this month), profile page |
 | 7 | Authentication & authorisation | Login/register, `is_admin`, policies (owner edits workouts, admin edits exercises), `auth` middleware |
 | 8 | Packages, versioning, external services | Tag ↔ Workout N‑M, summary email, a package, release tag |
-| 9 | File uploads, frontend assets | Exercise images (public), progress photos (private), Vite |
+| 9 | File uploads, frontend assets | Exercise images (public disk), progress photos (private disk), small vanilla JS (no build step) |
 | 10 | Errors, exceptions, security | Custom error pages, exception handling, security review |
 | 11 | Caching, N+1, sessions | Cache stats, check N+1, unit preference in the session |
 | 12 | Queues, model events | Queued email, observer that detects new personal records |

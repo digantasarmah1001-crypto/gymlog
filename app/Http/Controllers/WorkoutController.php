@@ -10,6 +10,7 @@ use App\Models\Workout;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 /**
@@ -52,9 +53,16 @@ class WorkoutController extends Controller
      */
     public function store(StoreWorkoutRequest $request): RedirectResponse
     {
-        // 'tags' isn't a column, so save the other fields first, then the N-M links.
-        $workout = $request->user()->workouts()->create($request->safe()->except('tags'));
-        $workout->tags()->sync($request->validated('tags', []));
+        // 'tags' and 'photo' aren't columns, so save the other fields first.
+        $workout = $request->user()->workouts()->make($request->safe()->except(['tags', 'photo']));
+
+        if ($request->hasFile('photo')) {
+            // 'local' = the PRIVATE disk (storage/app/private): no public URL exists for it.
+            $workout->photo_path = $request->file('photo')->store('progress-photos', 'local');
+        }
+
+        $workout->save();
+        $workout->tags()->sync($request->validated('tags', []));  // then the N-M links
 
         return redirect()->route('workouts.show', $workout)
             ->with('status', 'Workout logged. Now add your sets!');
@@ -87,7 +95,16 @@ class WorkoutController extends Controller
      */
     public function update(UpdateWorkoutRequest $request, Workout $workout): RedirectResponse
     {
-        $workout->update($request->safe()->except('tags'));
+        $workout->fill($request->safe()->except(['tags', 'photo']));
+
+        if ($request->hasFile('photo')) {
+            if ($workout->photo_path) {
+                Storage::disk('local')->delete($workout->photo_path);
+            }
+            $workout->photo_path = $request->file('photo')->store('progress-photos', 'local');
+        }
+
+        $workout->save();
         // sync() = make the pivot table match exactly these tag ids (adds new links, removes unticked ones).
         $workout->tags()->sync($request->validated('tags', []));
 
@@ -99,6 +116,9 @@ class WorkoutController extends Controller
     {
         Gate::authorize('delete', $workout);
 
+        if ($workout->photo_path) {
+            Storage::disk('local')->delete($workout->photo_path);
+        }
         $workout->delete();
 
         return redirect()->route('workouts.index')

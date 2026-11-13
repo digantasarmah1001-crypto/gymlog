@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'Track your training') · GymLog</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    {{-- defer = download now, run after the HTML is parsed (so the elements exist). --}}
+    <script src="{{ asset('js/app.js') }}" defer></script>
 </head>
 <body>
     <nav class="nav">
