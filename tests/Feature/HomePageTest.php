@@ -31,6 +31,20 @@ class HomePageTest extends TestCase
         $this->get('/')->assertSee('Mine')->assertDontSee('Not mine');
     }
 
+    public function test_the_page_still_works_when_served_from_a_real_cache(): void
+    {
+        // Tests normally use the in-memory "array" cache. A real store (file/database) serializes
+        // the values, which is where caching Eloquent objects went wrong once: test that case.
+        config(['cache.default' => 'file']);
+        cache()->flush();
+        $exercise = Exercise::factory()->create();
+
+        $this->get('/')->assertOk()->assertSee($exercise->name); // fills the cache
+        $this->get('/')->assertOk()->assertSee($exercise->name); // reads from the cache
+
+        cache()->flush();
+    }
+
     public function test_totals_are_cached_and_cleared_by_model_events(): void
     {
         $this->get('/');

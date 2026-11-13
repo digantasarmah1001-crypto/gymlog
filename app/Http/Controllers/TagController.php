@@ -46,8 +46,8 @@ class TagController extends Controller
         $user = $request->user();
 
         $workouts = $tag->workouts()
+            ->visibleTo($user)
             ->with('user')
-            ->when(! $user->is_admin, fn ($query) => $query->where('user_id', $user->id))
             ->latest('date')
             ->get();
 

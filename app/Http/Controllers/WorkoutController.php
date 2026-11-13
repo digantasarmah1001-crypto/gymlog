@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\ReplaceUploadedFile;
 use App\Http\Requests\StoreWorkoutRequest;
 use App\Http\Requests\UpdateWorkoutRequest;
 use App\Models\Tag;
@@ -10,8 +11,6 @@ use App\Models\Workout;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 /**
@@ -27,9 +26,9 @@ class WorkoutController extends Controller
     {
         $user = $request->user();
 
-        $workouts = Workout::with(['user', 'tags'])
+        $workouts = Workout::visibleTo($user)
+            ->with(['user', 'tags'])
             ->withCount('sets')
-            ->when(! $user->is_admin, fn ($query) => $query->where('user_id', $user->id))
             ->when($user->is_admin && $request->integer('user'), fn ($query) => $query->where('user_id', $request->integer('user')))
             ->latest('date')
             ->paginate(15)
@@ -52,15 +51,14 @@ class WorkoutController extends Controller
     /**
      * The new workout always belongs to the logged-in athlete (not to an id sent by the form).
      */
-    public function store(StoreWorkoutRequest $request): RedirectResponse
+    public function store(StoreWorkoutRequest $request, ReplaceUploadedFile $files): RedirectResponse
     {
         // 'tags' and 'photo' aren't columns, so save the other fields first.
         $workout = $request->user()->workouts()->make($request->safe()->except(['tags', 'photo']));
 
         if ($request->hasFile('photo')) {
             // 'local' = the PRIVATE disk (storage/app/private): no public URL exists for it.
-            $workout->photo_path = $request->file('photo')->store('progress-photos', 'local')
-                ?: throw ValidationException::withMessages(['photo' => 'The photo could not be saved, please try again.']);
+            $workout->photo_path = $files->handle($request->file('photo'), null, 'progress-photos', 'local', 'photo');
         }
 
         $workout->save();
@@ -95,16 +93,12 @@ class WorkoutController extends Controller
     /**
      * UpdateWorkoutRequest already checked the permission (authorize()) and the input (rules()).
      */
-    public function update(UpdateWorkoutRequest $request, Workout $workout): RedirectResponse
+    public function update(UpdateWorkoutRequest $request, Workout $workout, ReplaceUploadedFile $files): RedirectResponse
     {
         $workout->fill($request->safe()->except(['tags', 'photo']));
 
         if ($request->hasFile('photo')) {
-            if ($workout->photo_path) {
-                Storage::disk('local')->delete($workout->photo_path);
-            }
-            $workout->photo_path = $request->file('photo')->store('progress-photos', 'local')
-                ?: throw ValidationException::withMessages(['photo' => 'The photo could not be saved, please try again.']);
+            $workout->photo_path = $files->handle($request->file('photo'), $workout->photo_path, 'progress-photos', 'local', 'photo');
         }
 
         $workout->save();
@@ -115,13 +109,11 @@ class WorkoutController extends Controller
             ->with('status', 'Workout updated.');
     }
 
-    public function destroy(Workout $workout): RedirectResponse
+    public function destroy(Workout $workout, ReplaceUploadedFile $files): RedirectResponse
     {
         Gate::authorize('delete', $workout);
 
-        if ($workout->photo_path) {
-            Storage::disk('local')->delete($workout->photo_path);
-        }
+        $files->delete($workout->photo_path, 'local');
         $workout->delete();
 
         return redirect()->route('workouts.index')

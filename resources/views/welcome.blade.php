@@ -51,7 +51,7 @@
                 <p>
                     <span class="badge">{{ $muscleGroup }}</span><br>
                     @foreach ($exercises as $exercise)
-                        <a href="{{ route('exercises.show', $exercise) }}">{{ $exercise->name }}</a>@if (! $loop->last), @endif
+                        <a href="{{ route('exercises.show', $exercise['id']) }}">{{ $exercise['name'] }}</a>@if (! $loop->last), @endif
                     @endforeach
                 </p>
             @endforeach

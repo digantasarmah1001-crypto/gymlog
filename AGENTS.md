@@ -24,6 +24,9 @@ Roadmap and session schedule: `docs/plans/roadmap.md`.
 - Weights are stored in kg; display them with `<x-weight :kg="..." />` (respects the kg/lb session choice).
 - Side effects of saving models (PR detection, cache clearing) live in model events (`app/Observers`,
   `booted()`), slow work (emails) in queued jobs (`app/Jobs`) or `ShouldQueue` mailables.
+- Controllers stay skinny: reusable logic goes in `app/Actions` (one class, one `handle()`),
+  query rules in model scopes (`#[Scope]`). See README → Code structure.
+- Only cache plain arrays/scalars, never Eloquent models (`serializable_classes` is false).
 - Seeded admin: `admin@example.com` / `password`.
 - Auth is hand-written in `AuthController` (no starter kit). Workouts are private (WorkoutPolicy:
   owner or admin); sets follow their workout (WorkoutSetPolicy); exercises are read-only for

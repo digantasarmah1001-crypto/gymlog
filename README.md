@@ -85,6 +85,28 @@ with its own data (reps, weight, set number).
   (`ExerciseInUseException`), login rate limiting. See `docs/security.md` for the full review. With the default `MAIL_MAILER=log` it is written to
   `storage/logs/laravel.log` instead of being sent.
 
+## Code structure: where does what live?
+
+| Place | Responsibility | Examples |
+|---|---|---|
+| `routes/web.php` | Which URL goes to which controller method, which routes need login | `Route::resource('workouts', …)` |
+| `app/Http/Controllers` | **Skinny**: read the request, call the right class, return a view or redirect | `WorkoutController` |
+| `app/Http/Requests` | Validation rules and "may this user do this?" (`authorize()`) | `StoreWorkoutRequest` |
+| `app/Policies` | Permission rules per model | `WorkoutPolicy` (owner or admin) |
+| `app/Models` | Data + relationships + small model logic and query scopes | `Workout::visibleTo($user)`, `WorkoutSet::beatsPreviousBest()` |
+| `app/Actions` | One reusable task, used by controllers, commands and the seeder | `CalculateAthleteStats`, `ReplaceUploadedFile`, `RecalculatePersonalRecords` |
+| `app/Observers`, model `booted()` | Things that must happen whenever a model is saved/deleted | `WorkoutSetObserver` (records, cache) |
+| `app/Jobs`, `app/Mail` | Slow work done later by the queue worker | `NotifyPersonalRecord`, `WelcomeMail` |
+| `app/Console/Commands` | Artisan commands | `gymlog:weekly-summary`, `gymlog:recalculate-records` |
+| `app/Support` | Small helpers without database | `Weight` (kg/lb) |
+
+### Artisan commands
+
+```bash
+php artisan gymlog:weekly-summary --days=7
+php artisan gymlog:recalculate-records
+```
+
 ## Tests
 
 ```bash

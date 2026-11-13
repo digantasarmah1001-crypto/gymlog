@@ -3,6 +3,15 @@
 GymLog follows [semantic versioning](https://semver.org): `0.x.0` while the course runs,
 where **x = the session number**. Every version is a git tag (`git tag` lists them).
 
+## v0.14.0 – Session 14
+- Refactoring with the tests as safety net (65 green before and after):
+  - `Workout::visibleTo($user)` query scope replaces the same condition in two controllers;
+  - Action classes `ReplaceUploadedFile`, `CalculateAthleteStats`, `RecalculatePersonalRecords`;
+  - `ProfileController@show` shrinks from ~40 lines to 1.
+- Artisan commands `gymlog:weekly-summary` and `gymlog:recalculate-records`.
+- Fix (from v0.11.0): the cached exercise list contained Eloquent objects, which Laravel won't
+  unserialize from a real cache store; only plain arrays are cached now (+ regression test).
+
 ## v0.13.0 – Session 13
 - Test suite: 60 tests in `tests/Unit` and `tests/Feature/{Crud,Auth,Authorization}`.
 - GitHub Actions runs the tests on every push to `main`; Laravel's own repository bots

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Actions\RecalculatePersonalRecords;
 use App\Models\Exercise;
 use App\Models\Tag;
 use App\Models\User;
@@ -66,13 +67,8 @@ class DatabaseSeeder extends Seeder
         }
 
         // WithoutModelEvents (top of this class) switches the observer off while seeding,
-        // so mark the personal records afterwards, oldest workouts first.
-        WorkoutSet::with('workout')->get()
-            ->sortBy(fn ($set) => [$set->workout->date, $set->id])
-            ->each(function (WorkoutSet $set) {
-                $set->is_pr = $set->beatsPreviousBest();
-                $set->saveQuietly();
-            });
+        // so mark the personal records afterwards (same action as `php artisan gymlog:recalculate-records`).
+        app(RecalculatePersonalRecords::class)->handle();
     }
 
     /**

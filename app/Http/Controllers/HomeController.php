@@ -34,9 +34,14 @@ class HomeController extends Controller
             'exerciseCount' => Exercise::count(),
         ]);
 
-        // A collection grouped by muscle group: ['Chest' => [...], 'Legs' => [...]].
+        // Grouped by muscle group: ['Chest' => [['id' => 1, 'name' => 'Bench Press'], ...], ...].
+        // Only plain arrays go in the cache: for security, Laravel refuses to rebuild PHP objects
+        // (like Eloquent models) from the cache ('serializable_classes' => false in config/cache.php).
         $exercisesByMuscle = Cache::remember(self::EXERCISES_CACHE_KEY, now()->addMinutes(10),
-            fn () => Exercise::orderBy('name')->get()->groupBy('muscle_group'));
+            fn () => Exercise::orderBy('name')->get(['id', 'name', 'muscle_group'])
+                ->groupBy('muscle_group')
+                ->map(fn ($exercises) => $exercises->map->only(['id', 'name'])->all())
+                ->all());
 
         return view('welcome', $stats + [
             'exercisesByMuscle' => $exercisesByMuscle,

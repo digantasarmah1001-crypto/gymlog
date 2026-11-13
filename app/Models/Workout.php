@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Http\Controllers\HomeController;
 use Database\Factories\WorkoutFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
@@ -61,5 +63,18 @@ class Workout extends Model
     public function tags(): BelongsToMany
     {
         return $this->belongsToMany(Tag::class)->orderBy('name');
+    }
+
+    /**
+     * Query scope: only the workouts this user may see (their own; an admin sees all).
+     * Usage: Workout::visibleTo($user)->get()  or  $tag->workouts()->visibleTo($user)->get()
+     * It is the "query" version of WorkoutPolicy@view, so both rules live next to the model.
+     */
+    #[Scope]
+    protected function visibleTo(Builder $query, User $user): void
+    {
+        if (! $user->is_admin) {
+            $query->where('user_id', $user->id);
+        }
     }
 }

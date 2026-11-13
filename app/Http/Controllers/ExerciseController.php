@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\ReplaceUploadedFile;
 use App\Exceptions\ExerciseInUseException;
 use App\Http\Requests\StoreExerciseRequest;
 use App\Http\Requests\UpdateExerciseRequest;
@@ -10,8 +11,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 /**
@@ -52,14 +51,12 @@ class ExerciseController extends Controller implements HasMiddleware
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreExerciseRequest $request): RedirectResponse
+    public function store(StoreExerciseRequest $request, ReplaceUploadedFile $files): RedirectResponse
     {
         $exercise = new Exercise($request->safe()->except('image'));
 
         if ($request->hasFile('image')) {
-            // store() picks a unique random file name and returns the path, e.g. "exercises/Xy7….jpg"
-            $exercise->image_path = $request->file('image')->store('exercises', 'public')
-                ?: throw ValidationException::withMessages(['image' => 'The photo could not be saved, please try again.']);
+            $exercise->image_path = $files->handle($request->file('image'), null, 'exercises', 'public', 'image');
         }
 
         $exercise->save();
@@ -97,17 +94,12 @@ class ExerciseController extends Controller implements HasMiddleware
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateExerciseRequest $request, Exercise $exercise): RedirectResponse
+    public function update(UpdateExerciseRequest $request, Exercise $exercise, ReplaceUploadedFile $files): RedirectResponse
     {
         $exercise->fill($request->safe()->except('image'));
 
         if ($request->hasFile('image')) {
-            // Replace the old photo: delete the old file first so no orphans stay on disk.
-            if ($exercise->image_path) {
-                Storage::disk('public')->delete($exercise->image_path);
-            }
-            $exercise->image_path = $request->file('image')->store('exercises', 'public')
-                ?: throw ValidationException::withMessages(['image' => 'The photo could not be saved, please try again.']);
+            $exercise->image_path = $files->handle($request->file('image'), $exercise->image_path, 'exercises', 'public', 'image');
         }
 
         $exercise->save();
@@ -119,7 +111,7 @@ class ExerciseController extends Controller implements HasMiddleware
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Exercise $exercise): RedirectResponse
+    public function destroy(Exercise $exercise, ReplaceUploadedFile $files): RedirectResponse
     {
         Gate::authorize('delete', $exercise);
 
@@ -128,9 +120,7 @@ class ExerciseController extends Controller implements HasMiddleware
             throw new ExerciseInUseException($exercise);
         }
 
-        if ($exercise->image_path) {
-            Storage::disk('public')->delete($exercise->image_path);
-        }
+        $files->delete($exercise->image_path, 'public');
         $exercise->delete();
 
         return redirect()->route('exercises.index')
