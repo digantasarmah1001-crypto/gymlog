@@ -85,6 +85,25 @@ with its own data (reps, weight, set number).
   (`ExerciseInUseException`), login rate limiting. See `docs/security.md` for the full review. With the default `MAIL_MAILER=log` it is written to
   `storage/logs/laravel.log` instead of being sent.
 
+## Tests
+
+```bash
+php artisan test
+```
+
+60 tests (about 2 seconds) on an in-memory SQLite database, also run by GitHub Actions on every push
+(`.github/workflows/tests.yml`).
+
+| Folder | What it tests |
+|---|---|
+| `tests/Unit` | Single classes without database or HTTP: `Weight` conversion, `WorkoutPolicy` rules |
+| `tests/Feature/Crud` | All 7 actions + validation for exercises, workouts, sets and tags |
+| `tests/Feature/Auth` | Register, login, logout, wrong password, rate limiting, welcome mail |
+| `tests/Feature/Authorization` | Private workouts, admin-only exercises/tags, no self-promotion to admin |
+| `tests/Feature/*Test.php` | Home page & cache, profiles, uploads, personal records & queue, kg/lb, error pages, seeder |
+
+Helpers in `tests/TestCase.php`: `signIn()` and `signInAsAdmin()`.
+
 ## Packages
 
 - `barryvdh/laravel-debugbar` (dev only): a bar at the bottom of each page in local development

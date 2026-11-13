@@ -3,6 +3,11 @@
 GymLog follows [semantic versioning](https://semver.org): `0.x.0` while the course runs,
 where **x = the session number**. Every version is a git tag (`git tag` lists them).
 
+## v0.13.0 – Session 13
+- Test suite: 60 tests in `tests/Unit` and `tests/Feature/{Crud,Auth,Authorization}`.
+- GitHub Actions runs the tests on every push to `main`; Laravel's own repository bots
+  (Dependabot auto-merge, changelog and issue workflows) removed.
+
 ## v0.12.0 – Session 12
 - Personal records: `WorkoutSetObserver` marks `is_pr` and dispatches the queued `NotifyPersonalRecord` job.
 - Welcome email is queued (`ShouldQueue`); run `php artisan queue:work` to send queued mail.

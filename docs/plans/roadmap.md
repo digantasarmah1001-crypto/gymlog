@@ -17,7 +17,7 @@ Each session ends with **one commit** that contains exactly that session's GymLo
 | 10 | Errors, exceptions, security | Custom error pages, exception handling, security review |
 | 11 | Caching, N+1, sessions | Cache stats, check N+1, unit preference in the session |
 | 12 | Queues, model events | Queued email, observer that detects new personal records |
-| 13 | Testing | Feature + unit tests |
+| 13 | Testing | Feature + unit tests, GitHub Actions CI |
 | 14 | Refactoring | Action classes, Artisan command, cleanup |
 | 15 | Presentation | Final check from a clean clone, demo script |
 

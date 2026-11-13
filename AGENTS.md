@@ -36,3 +36,4 @@ Roadmap and session schedule: `docs/plans/roadmap.md`.
 - One commit per course session (15 in total), containing exactly that session's work from the roadmap.
 - Keep code simple and commented where it isn't obvious: the student must be able to explain and change every line.
 - `php artisan migrate:fresh --seed` must always succeed before committing.
+- `php artisan test` must be green; add a test for every new rule (see README → Tests).
