@@ -20,7 +20,10 @@ Roadmap and session schedule: `docs/plans/roadmap.md`.
 - Styling: plain CSS in `public/css/app.css`, self-hosted fonts in `public/fonts`
   (Big Shoulders Display for headings, Archivo for text). No npm build step until session 9.
 - Seeded admin: `admin@example.com` / `password`.
-- Until session 7 there is no authentication: workouts pick their owner from a dropdown. Do not add auth early.
+- Auth is hand-written in `AuthController` (no starter kit). Workouts are private (WorkoutPolicy:
+  owner or admin); sets follow their workout (WorkoutSetPolicy); exercises are read-only for
+  non-admins (ExercisePolicy). Check permissions with Form Request `authorize()` or `Gate::authorize()`.
+- `is_admin` is never fillable.
 
 ## Workflow
 - One commit per course session (15 in total), containing exactly that session's work from the roadmap.

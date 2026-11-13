@@ -38,7 +38,7 @@ Then open http://localhost:8000. No `npm` build is needed.
 `WorkoutSet` sits in the middle: Workout ↔ Exercise is many-to-many *through* it,
 with its own data (reps, weight, set number).
 
-## Features (sessions 1–5)
+## Features
 
 - Full CRUD (all 7 resource actions) for exercises, workouts and sets.
 - Resource routes; sets are a shallow nested resource (`/workouts/{workout}/sets`, `/sets/{set}`).
@@ -49,8 +49,12 @@ with its own data (reps, weight, set number).
 - Welcome page with totals, latest workouts and the exercise library.
 - Shared layout and Blade components (`x-input`, `x-select`, `x-textarea`, `x-stat`, `x-delete-button`).
 - Plain CSS with self-hosted fonts (Big Shoulders Display + Archivo, SIL Open Font License).
-
-Login and permissions come in session 7. Until then a workout's athlete is chosen from a dropdown.
+- Athlete profiles with stats: personal bests (database: `MAX` + `GROUP BY`) and volume per muscle (Collections).
+- Register, log in and log out (hand-written `AuthController`).
+- Permissions with policies:
+  - workouts and their sets are private (owner or admin only);
+  - only admins add, edit or delete exercises; everyone can browse them;
+  - your bodyweight and email are never shown to other people.
 
 ## Project files for AI tools
 

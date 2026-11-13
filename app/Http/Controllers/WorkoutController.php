@@ -8,55 +8,58 @@ use App\Models\User;
 use App\Models\Workout;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
+/**
+ * Workouts are private. Every route here requires login (see routes/web.php),
+ * and WorkoutPolicy decides who may see or change a single workout.
+ */
 class WorkoutController extends Controller
 {
     /**
-     * Display a listing of the resource, optionally filtered by athlete (?user=ID).
+     * Athletes see their own workouts. Admins see everyone's and can filter by athlete (?user=ID).
      */
     public function index(Request $request): View
     {
+        $user = $request->user();
+
         $workouts = Workout::with('user')
             ->withCount('sets')
-            ->when($request->integer('user'), fn ($query, $userId) => $query->where('user_id', $userId))
+            ->when(! $user->is_admin, fn ($query) => $query->where('user_id', $user->id))
+            ->when($user->is_admin && $request->integer('user'), fn ($query) => $query->where('user_id', $request->integer('user')))
             ->latest('date')
             ->paginate(15)
             ->withQueryString();
 
         return view('workouts.index', [
             'workouts' => $workouts,
-            'athletes' => User::orderBy('name')->pluck('name', 'id'),
+            'athletes' => $user->is_admin ? User::orderBy('name')->pluck('name', 'id') : collect(),
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(): View
     {
         return view('workouts.create', [
             'workout' => new Workout(['date' => today()]),
-            'athletes' => User::orderBy('name')->pluck('name', 'id'),
         ]);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * The new workout always belongs to the logged-in athlete (not to an id sent by the form).
      */
     public function store(StoreWorkoutRequest $request): RedirectResponse
     {
-        $workout = Workout::create($request->validated());
+        $workout = $request->user()->workouts()->create($request->validated());
 
         return redirect()->route('workouts.show', $workout)
             ->with('status', 'Workout logged. Now add your sets!');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Workout $workout): View
     {
+        Gate::authorize('view', $workout); // 403 if it isn't your workout
+
         $workout->load(['user', 'sets.exercise']);
 
         return view('workouts.show', [
@@ -65,19 +68,15 @@ class WorkoutController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Workout $workout): View
     {
-        return view('workouts.edit', [
-            'workout' => $workout,
-            'athletes' => User::orderBy('name')->pluck('name', 'id'),
-        ]);
+        Gate::authorize('update', $workout);
+
+        return view('workouts.edit', ['workout' => $workout]);
     }
 
     /**
-     * Update the specified resource in storage.
+     * UpdateWorkoutRequest already checked the permission (authorize()) and the input (rules()).
      */
     public function update(UpdateWorkoutRequest $request, Workout $workout): RedirectResponse
     {
@@ -87,11 +86,10 @@ class WorkoutController extends Controller
             ->with('status', 'Workout updated.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Workout $workout): RedirectResponse
     {
+        Gate::authorize('delete', $workout);
+
         $workout->delete();
 
         return redirect()->route('workouts.index')

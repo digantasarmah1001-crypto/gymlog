@@ -65,6 +65,16 @@ a:hover { background: var(--lime); }
 .nav a.active { border-bottom-color: var(--lime); }
 .nav .brand { font-family: var(--display); font-size: 2rem; font-weight: 900; letter-spacing: 1px; border: 0; margin-right: auto; }
 .nav .brand span { color: var(--lime); }
+.nav .nav-user { text-transform: none; letter-spacing: 0; font-size: .95rem; }
+.nav .nav-button { background: none; border: 0; color: #fff; cursor: pointer; font: 600 .85rem var(--text); text-transform: uppercase; letter-spacing: 1px; padding: 6px 0; opacity: .75; }
+.nav .nav-button:hover { opacity: 1; color: var(--lime); }
+.nav .btn-primary { color: var(--iron); padding: 6px 14px; border-bottom-width: 2px; }
+.nav .btn-primary:hover { border-bottom-color: var(--iron); }
+
+/* Login / register pages */
+.auth { max-width: 460px; margin: 0 auto; }
+.check { display: flex !important; align-items: center; gap: 8px; text-transform: none !important; letter-spacing: 0 !important; font-weight: 500 !important; }
+.field .check input { width: auto; margin: 0; }
 
 main { padding: 36px 0 72px; }
 

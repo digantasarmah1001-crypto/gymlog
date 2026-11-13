@@ -10,12 +10,12 @@ use Illuminate\Validation\Rule;
 class StoreExerciseRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
-     * (Authorisation with policies is added in session 7.)
+     * Only admins may add exercises (ExercisePolicy@create).
+     * This runs BEFORE validation: no permission = 403, the input isn't even checked.
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user()->can('create', Exercise::class);
     }
 
     /**

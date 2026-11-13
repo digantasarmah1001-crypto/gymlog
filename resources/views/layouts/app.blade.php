@@ -11,9 +11,26 @@
     <nav class="nav">
         <div class="container">
             <a href="{{ route('home') }}" class="brand">Gym<span>Log</span></a>
-            <a href="{{ route('workouts.index') }}" @class(['active' => request()->routeIs('workouts.*', 'sets.*')])>Workouts</a>
+            @auth
+                <a href="{{ route('workouts.index') }}" @class(['active' => request()->routeIs('workouts.*', 'sets.*')])>My workouts</a>
+            @endauth
             <a href="{{ route('exercises.index') }}" @class(['active' => request()->routeIs('exercises.*')])>Exercises</a>
-            <a href="{{ route('profiles.index') }}" @class(['active' => request()->routeIs('profiles.*')])>Athletes</a>
+            <a href="{{ route('profiles.index') }}" @class(['active' => request()->routeIs('profiles.index')])>Athletes</a>
+
+            {{-- @auth / @guest: show different links depending on whether someone is logged in --}}
+            @auth
+                <a href="{{ route('profiles.show', auth()->user()) }}" class="nav-user">
+                    Hi, {{ auth()->user()->name }} @if (auth()->user()->is_admin)<span class="badge">Admin</span>@endif
+                </a>
+                <form method="POST" action="{{ route('logout') }}" class="inline">
+                    @csrf
+                    <button type="submit" class="nav-button">Log out</button>
+                </form>
+            @endauth
+            @guest
+                <a href="{{ route('login') }}" @class(['active' => request()->routeIs('login')])>Log in</a>
+                <a href="{{ route('register') }}" class="btn btn-primary btn-sm">Register</a>
+            @endguest
         </div>
     </nav>
 

@@ -8,4 +8,8 @@ namespace App\Http\Requests;
  */
 class UpdateWorkoutSetRequest extends StoreWorkoutSetRequest
 {
+    public function authorize(): bool
+    {
+        return $this->user()->can('update', $this->route('set'));
+    }
 }

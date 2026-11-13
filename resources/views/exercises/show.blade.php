@@ -10,9 +10,13 @@
             <span class="muted">{{ $exercise->equipment }}</span>
         </div>
         <div class="actions">
-            <a href="{{ route('exercises.edit', $exercise) }}" class="btn">Edit</a>
-            <x-delete-button :action="route('exercises.destroy', $exercise)"
-                             confirm="Delete this exercise and all its logged sets?" />
+            @can('update', $exercise)
+                <a href="{{ route('exercises.edit', $exercise) }}" class="btn">Edit</a>
+            @endcan
+            @can('delete', $exercise)
+                <x-delete-button :action="route('exercises.destroy', $exercise)"
+                                 confirm="Delete this exercise and all its logged sets?" />
+            @endcan
         </div>
     </div>
 

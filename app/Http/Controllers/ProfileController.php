@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateProfileRequest;
 use App\Models\User;
 use App\Models\WorkoutSet;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 /**
@@ -68,5 +71,21 @@ class ProfileController extends Controller
             'volumeByMuscle' => $volumeByMuscle,
             'recentWorkouts' => $user->workouts()->withCount('sets')->latest('date')->take(5)->get(),
         ]);
+    }
+
+    /**
+     * Edit YOUR OWN profile. There is no {user} in the URL, so you can't even try to edit someone else's.
+     */
+    public function edit(Request $request): View
+    {
+        return view('profiles.edit', ['athlete' => $request->user()]);
+    }
+
+    public function update(UpdateProfileRequest $request): RedirectResponse
+    {
+        $request->user()->update($request->validated());
+
+        return redirect()->route('profiles.show', $request->user())
+            ->with('status', 'Profile updated.');
     }
 }

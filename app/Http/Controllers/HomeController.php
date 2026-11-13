@@ -22,8 +22,10 @@ class HomeController extends Controller
             'kgLifted' => (int) WorkoutSet::sum(DB::raw('reps * weight_kg')),
             'exerciseCount' => Exercise::count(),
 
-            // with('user') loads the users in one extra query instead of one per workout (avoids N+1).
-            'latestWorkouts' => Workout::with('user')->withCount('sets')->latest('date')->take(5)->get(),
+            // Workouts are private: logged-in athletes see their OWN latest workouts, guests see none.
+            'latestWorkouts' => auth()->check()
+                ? auth()->user()->workouts()->withCount('sets')->latest('date')->take(5)->get()
+                : collect(),
 
             // A collection grouped by muscle group: ['Chest' => [...], 'Legs' => [...]].
             'exercisesByMuscle' => Exercise::orderBy('name')->get()->groupBy('muscle_group'),

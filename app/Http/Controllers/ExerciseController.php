@@ -6,10 +6,26 @@ use App\Http\Requests\StoreExerciseRequest;
 use App\Http\Requests\UpdateExerciseRequest;
 use App\Models\Exercise;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
-class ExerciseController extends Controller
+/**
+ * The exercise library: everyone may browse it, only admins may change it (ExercisePolicy).
+ */
+class ExerciseController extends Controller implements HasMiddleware
 {
+    /**
+     * Login is required for everything except browsing (index and show).
+     */
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth', except: ['index', 'show']),
+        ];
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -25,6 +41,8 @@ class ExerciseController extends Controller
      */
     public function create(): View
     {
+        Gate::authorize('create', Exercise::class);
+
         return view('exercises.create', ['exercise' => new Exercise]);
     }
 
@@ -60,6 +78,8 @@ class ExerciseController extends Controller
      */
     public function edit(Exercise $exercise): View
     {
+        Gate::authorize('update', $exercise);
+
         return view('exercises.edit', ['exercise' => $exercise]);
     }
 
@@ -79,6 +99,8 @@ class ExerciseController extends Controller
      */
     public function destroy(Exercise $exercise): RedirectResponse
     {
+        Gate::authorize('delete', $exercise);
+
         $exercise->delete();
 
         return redirect()->route('exercises.index')

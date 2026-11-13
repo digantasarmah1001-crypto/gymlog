@@ -9,11 +9,13 @@ use App\Models\Workout;
 use App\Models\WorkoutSet;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 /**
  * Sets are a shallow nested resource:
  * /workouts/{workout}/sets (index, create, store) and /sets/{set} (show, edit, update, destroy).
+ * WorkoutSetPolicy: you may only touch sets of your own workouts (admins: all).
  */
 class WorkoutSetController extends Controller
 {
@@ -22,6 +24,8 @@ class WorkoutSetController extends Controller
      */
     public function index(Workout $workout): View
     {
+        Gate::authorize('view', $workout);
+
         $workout->load(['user', 'sets.exercise']);
 
         return view('sets.index', [
@@ -35,6 +39,8 @@ class WorkoutSetController extends Controller
      */
     public function create(Workout $workout): View
     {
+        Gate::authorize('update', $workout); // adding a set = changing the workout
+
         $lastSet = $workout->sets()->reorder()->latest('set_number')->first();
 
         return view('sets.create', [
@@ -66,6 +72,8 @@ class WorkoutSetController extends Controller
      */
     public function show(WorkoutSet $set): View
     {
+        Gate::authorize('view', $set);
+
         $set->load(['workout.user', 'exercise']);
 
         return view('sets.show', ['set' => $set]);
@@ -76,6 +84,8 @@ class WorkoutSetController extends Controller
      */
     public function edit(WorkoutSet $set): View
     {
+        Gate::authorize('update', $set);
+
         return view('sets.edit', [
             'set' => $set,
             'workout' => $set->workout,
@@ -99,6 +109,8 @@ class WorkoutSetController extends Controller
      */
     public function destroy(WorkoutSet $set): RedirectResponse
     {
+        Gate::authorize('delete', $set);
+
         $set->delete();
 
         return redirect()->route('workouts.show', $set->workout_id)

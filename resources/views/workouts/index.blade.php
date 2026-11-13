@@ -4,8 +4,9 @@
 
 @section('content')
     <div class="page-header">
-        <h1>Workouts</h1>
+        <h1>{{ auth()->user()->is_admin ? 'All workouts' : 'My workouts' }}</h1>
         <div class="actions">
+            @if ($athletes->isNotEmpty())   {{-- only admins get the athlete filter --}}
             <form method="GET" action="{{ route('workouts.index') }}" class="actions">
                 <select name="user" class="filter" onchange="this.form.submit()">
                     <option value="">All athletes</option>
@@ -15,6 +16,7 @@
                 </select>
                 <noscript><button type="submit" class="btn btn-sm">Filter</button></noscript>
             </form>
+            @endif
             <a href="{{ route('workouts.create') }}" class="btn btn-primary">+ Log workout</a>
         </div>
     </div>

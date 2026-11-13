@@ -5,7 +5,9 @@
 @section('content')
     <div class="page-header">
         <h1>Exercises</h1>
-        <a href="{{ route('exercises.create') }}" class="btn btn-primary">+ New exercise</a>
+        @can('create', App\Models\Exercise::class)
+            <a href="{{ route('exercises.create') }}" class="btn btn-primary">+ New exercise</a>
+        @endcan
     </div>
 
     <div class="card">
@@ -21,9 +23,13 @@
                         <td>{{ $exercise->equipment ?? '—' }}</td>
                         <td>{{ $exercise->sets_count }}</td>
                         <td class="actions">
-                            <a href="{{ route('exercises.edit', $exercise) }}" class="btn btn-sm">Edit</a>
-                            <x-delete-button :action="route('exercises.destroy', $exercise)"
-                                             confirm="Delete this exercise and all its logged sets?" />
+                            @can('update', $exercise)
+                                <a href="{{ route('exercises.edit', $exercise) }}" class="btn btn-sm">Edit</a>
+                            @endcan
+                            @can('delete', $exercise)
+                                <x-delete-button :action="route('exercises.destroy', $exercise)"
+                                                 confirm="Delete this exercise and all its logged sets?" />
+                            @endcan
                         </td>
                     </tr>
                 @empty

@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Dummy admin required by the assessment (password: "password").
-        $admin = User::factory()->create([
+        $admin = User::factory()->admin()->create([
             'name' => 'Admin',
             'email' => 'admin@example.com',
             'password' => 'password',

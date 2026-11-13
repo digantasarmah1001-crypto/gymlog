@@ -11,6 +11,16 @@
                 <span class="badge">Goal</span> {{ $athlete->goal }}
             @endif
         </div>
+
+        {{-- Only the athlete themself sees their bodyweight and the edit button. --}}
+        @if (auth()->id() === $athlete->id)
+            <div class="actions">
+                @if ($athlete->bodyweight_kg)
+                    <span class="muted">Bodyweight (only you see this): <strong>{{ $athlete->bodyweight_kg }} kg</strong></span>
+                @endif
+                <a href="{{ route('profile.edit') }}" class="btn">Edit profile</a>
+            </div>
+        @endif
     </div>
 
     <section class="grid">
@@ -61,7 +71,12 @@
         <ul class="list">
             @forelse ($recentWorkouts as $workout)
                 <li>
-                    <a href="{{ route('workouts.show', $workout) }}"><strong>{{ $workout->title }}</strong></a>
+                    {{-- Workouts are private: only link to them if you're allowed to open them. --}}
+                    @can('view', $workout)
+                        <a href="{{ route('workouts.show', $workout) }}"><strong>{{ $workout->title }}</strong></a>
+                    @else
+                        <strong>{{ $workout->title }}</strong>
+                    @endcan
                     <span class="muted">{{ $workout->date->format('D j M') }} · {{ $workout->sets_count }} sets</span>
                 </li>
             @empty

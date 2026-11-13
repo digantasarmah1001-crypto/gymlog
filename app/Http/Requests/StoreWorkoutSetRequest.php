@@ -10,12 +10,11 @@ use Illuminate\Validation\Rule;
 class StoreWorkoutSetRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
-     * (Authorisation with policies is added in session 7.)
+     * Adding a set changes the workout, so you must be allowed to update that workout.
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user()->can('update', $this->route('workout'));
     }
 
     /**
