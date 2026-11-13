@@ -3,6 +3,10 @@
 GymLog follows [semantic versioning](https://semver.org): `0.x.0` while the course runs,
 where **x = the session number**. Every version is a git tag (`git tag` lists them).
 
+## v1.0.0 – Session 15
+- Verified from a clean clone: install steps in the README, `migrate:fresh --seed`, 65 tests, every page.
+- `docs/presentation.md`: demo script, requirement map, Q&A, how to make common live changes.
+
 ## v0.14.0 – Session 14
 - Refactoring with the tests as safety net (65 green before and after):
   - `Workout::visibleTo($user)` query scope replaces the same condition in two controllers;

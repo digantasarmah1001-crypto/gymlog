@@ -3,7 +3,11 @@
 A personal workout tracker built with Laravel for **CS404 – Modern Web Application 1**.
 
 A workout (e.g. "Leg day") belongs to an athlete and contains exercises.
-For each exercise the athlete logs their sets: reps × kg.
+For each exercise the athlete logs their sets: reps × kg. GymLog spots new personal records 🏆,
+shows stats per athlete and keeps everyone's workouts private.
+
+**Presenting or grading?** See [`docs/presentation.md`](docs/presentation.md): demo script,
+where every assessment requirement lives in the code, and likely questions.
 
 ## Getting started
 
