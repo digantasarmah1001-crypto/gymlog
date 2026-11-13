@@ -16,7 +16,7 @@
             <h2>{{ $exerciseName }}</h2>
             <p>
                 @foreach ($sets as $set)
-                    <a href="{{ route('sets.show', $set) }}" class="btn btn-sm">{{ $set->reps }} × <x-weight :kg="$set->weight_kg" /></a>
+                    <a href="{{ route('sets.show', $set) }}" class="btn btn-sm">{{ $set->reps }} × <x-weight :kg="$set->weight_kg" />@if ($set->is_pr) 🏆@endif</a>
                 @endforeach
             </p>
             <p class="muted">Best set: <x-weight :kg="$sets->max('weight_kg')" /> · Total reps: {{ $sets->sum('reps') }}</p>

@@ -61,10 +61,11 @@ class WorkoutSetController extends Controller
      */
     public function store(StoreWorkoutSetRequest $request, Workout $workout): RedirectResponse
     {
-        $workout->sets()->create($request->validated());
+        $set = $workout->sets()->create($request->validated());
 
+        // is_pr was filled in by WorkoutSetObserver (model event) during create().
         return redirect()->route('workouts.show', $workout)
-            ->with('status', 'Set added.');
+            ->with('status', $set->is_pr ? '🏆 New personal record! Set added.' : 'Set added.');
     }
 
     /**

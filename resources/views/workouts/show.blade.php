@@ -58,7 +58,10 @@
                         <td>{{ $set->set_number }}</td>
                         <td><a href="{{ route('exercises.show', $set->exercise) }}">{{ $set->exercise->name }}</a></td>
                         <td>{{ $set->reps }}</td>
-                        <td><x-weight :kg="$set->weight_kg" /></td>
+                        <td>
+                            <x-weight :kg="$set->weight_kg" />
+                            @if ($set->is_pr)<span class="pr" title="Personal record">🏆 PR</span>@endif
+                        </td>
                         <td class="actions">
                             <a href="{{ route('sets.edit', $set) }}" class="btn btn-sm">Edit</a>
                             <x-delete-button :action="route('sets.destroy', $set)" confirm="Delete this set?" />

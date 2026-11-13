@@ -22,6 +22,14 @@ php artisan serve
 
 `storage:link` is needed once, so uploaded exercise photos are reachable at `/storage/...`.
 
+Emails (welcome, new personal record) go through the **queue**. To process them, run in a second terminal:
+
+```bash
+php artisan queue:work
+```
+
+With the default `MAIL_MAILER=log` the emails then appear in `storage/logs/laravel.log`.
+
 When `migrate` asks to create the SQLite database, answer **yes**.
 Then open http://localhost:8000. No `npm` build is needed.
 
@@ -69,6 +77,9 @@ with its own data (reps, weight, set number).
 - Welcome email after registering (if sending fails, registering still works and the error is logged).
 - Performance: lazy loading is forbidden outside production (catches N+1 queries), the
   welcome-page totals are cached.
+- Personal records: a `WorkoutSet` observer (model event) marks a set 🏆 when it beats the athlete's
+  earlier best for that exercise, and dispatches the queued `NotifyPersonalRecord` job (email).
+  Model events also clear the cached welcome-page totals.
 - kg / lb switch in the nav, remembered in the session (weights are always stored in kg).
 - Errors & security: custom error pages, exercises that are in use can't be deleted
   (`ExerciseInUseException`), login rate limiting. See `docs/security.md` for the full review. With the default `MAIL_MAILER=log` it is written to

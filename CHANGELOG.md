@@ -3,6 +3,11 @@
 GymLog follows [semantic versioning](https://semver.org): `0.x.0` while the course runs,
 where **x = the session number**. Every version is a git tag (`git tag` lists them).
 
+## v0.12.0 – Session 12
+- Personal records: `WorkoutSetObserver` marks `is_pr` and dispatches the queued `NotifyPersonalRecord` job.
+- Welcome email is queued (`ShouldQueue`); run `php artisan queue:work` to send queued mail.
+- Model events (observer + `booted()` closures) clear the welcome-page cache when data changes.
+
 ## v0.11.0 – Session 11
 - N+1 guard: `Model::preventLazyLoading()` outside production (every page checked, none found).
 - Welcome-page totals and exercise library cached (`Cache::remember`, 10 minutes).

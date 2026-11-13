@@ -64,6 +64,15 @@ class DatabaseSeeder extends Seeder
                 }
             }
         }
+
+        // WithoutModelEvents (top of this class) switches the observer off while seeding,
+        // so mark the personal records afterwards, oldest workouts first.
+        WorkoutSet::with('workout')->get()
+            ->sortBy(fn ($set) => [$set->workout->date, $set->id])
+            ->each(function (WorkoutSet $set) {
+                $set->is_pr = $set->beatsPreviousBest();
+                $set->saveQuietly();
+            });
     }
 
     /**
