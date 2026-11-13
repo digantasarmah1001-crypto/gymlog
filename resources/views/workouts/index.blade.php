@@ -29,7 +29,7 @@
                     <tr>
                         <td>{{ $workout->date->format('D j M Y') }}</td>
                         <td><a href="{{ route('workouts.show', $workout) }}">{{ $workout->title }}</a></td>
-                        <td>{{ $workout->user->name }}</td>
+                        <td><a href="{{ route('profiles.show', $workout->user) }}">{{ $workout->user->name }}</a></td>
                         <td>{{ $workout->duration_minutes ? $workout->duration_minutes . ' min' : '—' }}</td>
                         <td>{{ $workout->sets_count }}</td>
                         <td class="actions">

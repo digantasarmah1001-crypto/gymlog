@@ -7,7 +7,7 @@
         <div>
             <h1>{{ $workout->title }}</h1>
             <span class="muted">
-                {{ $workout->user->name }} · {{ $workout->date->format('l j F Y') }}
+                <a href="{{ route('profiles.show', $workout->user) }}">{{ $workout->user->name }}</a> · {{ $workout->date->format('l j F Y') }}
                 @if ($workout->duration_minutes) · {{ $workout->duration_minutes }} min @endif
             </span>
         </div>

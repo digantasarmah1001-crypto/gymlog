@@ -37,7 +37,7 @@
                 @forelse ($recentSets as $set)
                     <tr>
                         <td>{{ $set->workout->date->format('j M Y') }}</td>
-                        <td>{{ $set->workout->user->name }}</td>
+                        <td><a href="{{ route('profiles.show', $set->workout->user) }}">{{ $set->workout->user->name }}</a></td>
                         <td>{{ $set->workout->title }}</td>
                         <td>{{ $set->reps }}</td>
                         <td>{{ $set->weight_kg }} kg</td>

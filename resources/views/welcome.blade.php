@@ -24,7 +24,7 @@
             <ul class="list">
                 @forelse ($latestWorkouts as $workout)
                     <li>
-                        <span><a href="{{ route('workouts.show', $workout) }}"><strong>{{ $workout->title }}</strong></a> <span class="muted">· {{ $workout->user->name }}</span></span>
+                        <span><a href="{{ route('workouts.show', $workout) }}"><strong>{{ $workout->title }}</strong></a> <span class="muted">· <a href="{{ route('profiles.show', $workout->user) }}">{{ $workout->user->name }}</a></span></span>
                         <span class="muted">{{ $workout->date->format('D j M') }} · {{ $workout->sets_count }} sets</span>
                     </li>
                 @empty

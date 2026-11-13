@@ -25,9 +25,14 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
+            'name' => fake()->firstName().' '.fake()->lastName(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
+            'goal' => fake()->optional(0.7)->randomElement([
+                'Squat 140 kg', 'First pull-up', 'Bench my bodyweight', 'Train 4x a week',
+                'Deadlift 200 kg', 'Run a 5K and stay strong', 'Get back after injury',
+            ]),
+            'bodyweight_kg' => fake()->numberBetween(110, 220) / 2, // 55.0 – 110.0 kg
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
         ];

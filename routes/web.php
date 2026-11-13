@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ExerciseController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WorkoutController;
 use App\Http\Controllers\WorkoutSetController;
 use Illuminate\Support\Facades\Route;
@@ -17,3 +18,7 @@ Route::resource('workouts', WorkoutController::class);
 //   /workouts/{workout}/sets        index, create, store
 //   /sets/{set}                     show, edit, update, destroy
 Route::resource('workouts.sets', WorkoutSetController::class)->shallow();
+
+// Athlete profiles (read-only pages: list + one profile).
+Route::get('/athletes', [ProfileController::class, 'index'])->name('profiles.index');
+Route::get('/athletes/{user}', [ProfileController::class, 'show'])->name('profiles.show');
